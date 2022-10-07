@@ -10,6 +10,7 @@ public class FmbaApplication {
 
 	public static void main(String[] args) {
 		String env = System.getProperty("env");
+		System.out.println("=> ENV = " + env);
 		if(env == null) {
 			System.getProperties().put("env", "P");
 		}
