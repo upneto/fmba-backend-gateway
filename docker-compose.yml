@@ -19,6 +19,3 @@ services:
 networks:
   fmba-bridge:
     driver: bridge
-    
-volumes:
-  db:
