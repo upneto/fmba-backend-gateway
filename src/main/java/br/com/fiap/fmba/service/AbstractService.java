@@ -17,7 +17,7 @@ public abstract class AbstractService {
 	private String buildParans(Entry<String, Object>... params) {
 		StringBuilder sb = new StringBuilder();
 		for(Entry<String, Object> param : params) {
-			if(!sb.isEmpty()) {
+			if(!sb.toString().isEmpty()) {
 				sb.append("&");
 			}
 			sb.append(param.getKey()).append("=").append(param.getValue());
