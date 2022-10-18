@@ -3,11 +3,16 @@ package br.com.fiap.fmba.service;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
 public abstract class AbstractService {
 
+	/** Logger */
+	public static Logger LOGGER = LoggerFactory.getLogger(AbstractService.class);
+	
 	/**
 	 * Constroi String com parametros (Query Param)
 	 * @param params

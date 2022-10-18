@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.fmba.controller.payload.autenticacao.LoginRequest;
+import br.com.fiap.fmba.controller.payload.autenticacao.LoginResponse;
 import br.com.fiap.fmba.resources.exception.AutenticatorException;
 import br.com.fiap.fmba.service.AutenticacaoService;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +31,7 @@ public class LoginController {
             @ApiResponse(code = 401, message = "Foi gerada uma exceção de autenticação")
     })
 	@PostMapping(produces="application/json", consumes="application/json")
-	public ResponseEntity<?> login(@RequestBody LoginRequest request) throws AutenticatorException  {
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws AutenticatorException  {
 		return new ResponseEntity<>(this.service.login(request), HttpStatus.OK);
 	}
 }

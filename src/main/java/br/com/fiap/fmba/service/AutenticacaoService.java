@@ -11,7 +11,7 @@ import br.com.fiap.fmba.resources.exception.AutenticatorException;
 
 @Service
 public class AutenticacaoService extends AbstractService {
-
+	
 	/**
 	 * Variavel injetada pelo contexto Spring
 	 * 		'env' = variavel injetada da runtime jvm
@@ -27,6 +27,7 @@ public class AutenticacaoService extends AbstractService {
 	 * @throws AutenticatorException
 	 */
 	public LoginResponse login(LoginRequest request) throws AutenticatorException {
+		LOGGER.info("Executando API: " + url + "login");
 		return super.doPost(url + "login", LoginResponse.class, request);
 	}
 
@@ -37,6 +38,7 @@ public class AutenticacaoService extends AbstractService {
 	 * @throws AutenticatorException
 	 */
 	public LoginResponse verify(TokenRequest request) throws AutenticatorException {
+		LOGGER.info("Executando API: " + url + "login/verify");
 		return super.doPost(url + "login/verify", LoginResponse.class, request);
 	}
 }
