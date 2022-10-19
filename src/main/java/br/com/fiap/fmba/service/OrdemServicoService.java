@@ -1,14 +1,20 @@
 package br.com.fiap.fmba.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import br.com.fiap.fmba.controller.payload.ordem.OrdemServicoPayload;
+import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoRequest;
+import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoResponse;
 import br.com.fiap.fmba.resources.exception.BusinessException;
 import br.com.fiap.fmba.resources.exception.WebServiceException;
+import br.com.fiap.fmba.service.payload.ClientePayload;
+import br.com.fiap.fmba.service.payload.OrdemServicoPayload;
+import br.com.fiap.fmba.service.payload.VeiculoPayload;
 
 @Service
 public class OrdemServicoService extends AbstractService {
@@ -20,6 +26,12 @@ public class OrdemServicoService extends AbstractService {
 	 */
 	@Value("${${env}.url.backend.ordem_servico}")
 	private String url = null;
+	
+	@Autowired
+	private VeiculoService veiculoService = null;
+	
+	@Autowired
+	private ClienteService clienteService = null;
 
 	/**
 	 * Find
@@ -29,9 +41,21 @@ public class OrdemServicoService extends AbstractService {
 	 * @throws BusinessException
 	 */
 	@SuppressWarnings("unchecked")
-	public OrdemServicoPayload find(long id) throws WebServiceException, BusinessException {		
+	public OrdemServicoResponse find(long id) throws WebServiceException, BusinessException {
 		try {
-			return super.doGet(this.url + id, OrdemServicoPayload.class);
+			OrdemServicoPayload payload = super.doGet(this.url + id, OrdemServicoPayload.class);	
+			
+			VeiculoPayload veiculo = this.getVeiculo(payload.getVeiculo(), false);
+			ClientePayload cliente = this.getCliente(payload.getCliente(), false);
+			
+			return OrdemServicoResponse.builder()
+					.codigo(payload.getId())
+					.dataInicio(payload.getDataInicioFormat())
+					.dataFinal(payload.getDataFinalFormat())
+					.nomeCliente(cliente.getNome())
+					.veiculo(veiculo.getMarca() + " " + veiculo.getModelo())
+					.placa(veiculo.getPlaca())
+					.build();
 		}catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
 		}		
@@ -44,12 +68,29 @@ public class OrdemServicoService extends AbstractService {
 	 * @throws BusinessException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<OrdemServicoPayload> findAll() throws WebServiceException, BusinessException {
+	public List<OrdemServicoResponse> findAll() throws WebServiceException, BusinessException {
+		List<OrdemServicoResponse> response = new ArrayList<>();
 		try {
-			return super.doGet(this.url, new ArrayList<OrdemServicoPayload>());
-		}catch (Exception e) {
+			List<OrdemServicoPayload> listaPayload = super.doGetList(this.url, OrdemServicoPayload.class);
+			for(OrdemServicoPayload payload : listaPayload) {
+				
+				VeiculoPayload veiculo = this.getVeiculo(payload.getVeiculo(), false);
+				ClientePayload cliente = this.getCliente(payload.getCliente(), false);
+				
+				response.add(OrdemServicoResponse.builder()
+						.codigo(payload.getId())
+						.dataInicio(payload.getDataInicioFormat())
+						.dataFinal(payload.getDataFinalFormat())
+						.nomeCliente(cliente.getNome())
+						.veiculo(veiculo.getMarca() + " " + veiculo.getModelo())
+						.placa(veiculo.getPlaca())
+						.build());
+			}			
+		}
+		catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
 		}		
+		return response;
 	}
 
 	/**
@@ -58,7 +99,7 @@ public class OrdemServicoService extends AbstractService {
 	 * @throws WebServiceException
 	 * @throws BusinessException
 	 */
-	public void insert(OrdemServicoPayload ordemServico) throws WebServiceException, BusinessException {
+	public void insert(OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException {
 		try {
 			super.doPost(this.url, OrdemServicoPayload.class, ordemServico);
 		}catch (Exception e) {
@@ -72,7 +113,7 @@ public class OrdemServicoService extends AbstractService {
 	 * @throws WebServiceException
 	 * @throws BusinessException
 	 */
-	public void update(OrdemServicoPayload ordemServico) throws WebServiceException, BusinessException {
+	public void update(OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException {
 		try {
 			super.doPut(this.url, ordemServico);
 		}catch (Exception e) {
@@ -92,5 +133,35 @@ public class OrdemServicoService extends AbstractService {
 		}catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
 		}
+	}
+	
+	// ***** Metodos auxiliares ****
+	
+	private VeiculoPayload getVeiculo(BigInteger id, boolean trataErro) throws WebServiceException, BusinessException {
+		VeiculoPayload response = new VeiculoPayload();
+		try {			
+			response = this.veiculoService.findBy(id);
+		}
+		catch (WebServiceException | BusinessException e) {
+			LOGGER.error(e.getMessage(), e);
+			if(trataErro) {
+				throw e;
+			}
+		}
+		return response;
+	}
+	
+	private ClientePayload getCliente(BigInteger id, boolean trataErro) throws WebServiceException, BusinessException {
+		ClientePayload response = new ClientePayload();
+		try {			
+			response = this.clienteService.findBy(id);
+		}
+		catch (WebServiceException | BusinessException e) {
+			LOGGER.error(e.getMessage(), e);
+			if(trataErro) {
+				throw e;
+			}
+		}
+		return response;
 	}
 }

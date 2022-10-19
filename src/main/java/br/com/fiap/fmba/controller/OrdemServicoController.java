@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.fiap.fmba.controller.payload.ordem.OrdemServicoPayload;
+import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoRequest;
+import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoResponse;
 import br.com.fiap.fmba.resources.exception.BusinessException;
 import br.com.fiap.fmba.resources.exception.WebServiceException;
 import br.com.fiap.fmba.service.OrdemServicoService;
@@ -35,7 +36,7 @@ public class OrdemServicoController {
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
 	@GetMapping(produces="application/json")
-	public ResponseEntity<List<OrdemServicoPayload>> findAll() throws WebServiceException, BusinessException {
+	public ResponseEntity<List<OrdemServicoResponse>> findAll() throws WebServiceException, BusinessException {
 		return new ResponseEntity<>(this.service.findAll(), HttpStatus.OK);
 	}
 	
@@ -45,7 +46,7 @@ public class OrdemServicoController {
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
 	@GetMapping(value = "/{id}", produces="application/json", consumes="application/json")
-	public ResponseEntity<OrdemServicoPayload> findBy(@PathVariable long id) throws WebServiceException, BusinessException  {
+	public ResponseEntity<OrdemServicoResponse> findBy(@PathVariable long id) throws WebServiceException, BusinessException  {
 		return new ResponseEntity<>(this.service.find(id), HttpStatus.OK);
 	}
 	
@@ -55,8 +56,8 @@ public class OrdemServicoController {
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
 	@PostMapping(produces="application/json", consumes="application/json")
-	public ResponseEntity<?> insert(@RequestBody OrdemServicoPayload pessoa) throws WebServiceException, BusinessException  {
-		this.service.insert(pessoa);
+	public ResponseEntity<?> insert(@RequestBody OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException  {
+		this.service.insert(ordemServico);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -66,8 +67,8 @@ public class OrdemServicoController {
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
 	@PutMapping(produces="application/json", consumes="application/json")
-	public ResponseEntity<?> update(@RequestBody OrdemServicoPayload pessoa) throws WebServiceException, BusinessException  {
-		this.service.update(pessoa);
+	public ResponseEntity<?> update(@RequestBody OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException  {
+		this.service.update(ordemServico);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

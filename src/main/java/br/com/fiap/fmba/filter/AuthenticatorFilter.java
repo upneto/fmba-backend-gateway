@@ -42,7 +42,6 @@ public class AuthenticatorFilter implements Filter {
 	    	String token = httpRequest.getHeader("JWT_TOKEN");	    
 	    	try {			
 	    		this.autenticacaoService.verify(new TokenRequest(token));
-	    		chain.doFilter(request, response);
 	    	}catch (Exception e) {
 	    		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 	    		return;

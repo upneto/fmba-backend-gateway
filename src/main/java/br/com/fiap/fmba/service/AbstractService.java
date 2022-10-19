@@ -1,12 +1,21 @@
 package br.com.fiap.fmba.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractService {
 
@@ -39,13 +48,27 @@ public abstract class AbstractService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected <RESPONSE> List<RESPONSE> doGet(String url, List<RESPONSE> listResponseClass, Entry<String, Object>... params) {
+	protected <RESPONSE> List<RESPONSE> doGetList(String url, Class<RESPONSE> responseClass, Entry<String, Object>... params) {
+		LOGGER.info("Executando API: findAll " + this.getClass().getSimpleName());
+		
+		List<RESPONSE> responseList = new ArrayList<>();
+		
 		StringBuilder finalUrl = new StringBuilder(url);
 		if(params != null && params.length > 0) {
 			finalUrl.append("?").append(this.buildParans(params));
 		}
 		RestTemplate rest = new RestTemplate();
-		return rest.getForObject(finalUrl.toString(), listResponseClass.getClass());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<String> request = new HttpEntity<String>("body", headers);
+		ResponseEntity<Object[]> exchange = rest.exchange(finalUrl.toString(), HttpMethod.GET, request, Object[].class);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Arrays.stream(exchange.getBody()).forEach(object -> {			
+			responseList.add(mapper.convertValue(object, responseClass));
+		});	
+		return responseList;
 	}
 	
 	/**
@@ -57,12 +80,59 @@ public abstract class AbstractService {
 	 */
 	@SuppressWarnings("unchecked")
 	protected <RESPONSE> RESPONSE doGet(String url, Class<RESPONSE> responseClass, Entry<String, Object>... params) {
+		LOGGER.info("Executando API: doGet " + this.getClass().getSimpleName());
 		StringBuilder finalUrl = new StringBuilder(url);
 		if(params != null && params.length > 0) {
 			finalUrl.append("?").append(this.buildParans(params));
 		}
 		RestTemplate rest = new RestTemplate();
-		return rest.getForObject(finalUrl.toString(), responseClass);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<String> request = new HttpEntity<String>("body", headers);
+		ResponseEntity<RESPONSE> exchange = rest.exchange(finalUrl.toString(), HttpMethod.GET, request, responseClass);
+		return exchange.getBody();
+	}
+	
+	/**
+	 * POST
+	 * @param <RESPONSE>
+	 * @param <BODY>
+	 * @param url
+	 * @param body
+	 */
+	protected <BODY> void doPost(String url, BODY body) {
+		LOGGER.info("Executando API: doPost " + this.getClass().getSimpleName());
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
+		rest.exchange(url, HttpMethod.POST, request, Object.class);
+	}
+	
+	/**
+	 * POST
+	 * @param <RESPONSE>
+	 * @param url
+	 * @param listResponseClass
+	 * @param params
+	 * @return
+	 */
+	protected <RESPONSE, BODY> List<RESPONSE> doPostList(String url, Class<RESPONSE> responseClass, BODY body) {
+		LOGGER.info("Executando API: doPostList " + this.getClass().getSimpleName());
+		List<RESPONSE> responseList = new ArrayList<>();		
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
+		ResponseEntity<Object[]> exchange = rest.exchange(url, HttpMethod.POST, request, Object[].class);
+		ObjectMapper mapper = new ObjectMapper();
+		Arrays.stream(exchange.getBody()).forEach(object -> {			
+			responseList.add(mapper.convertValue(object, responseClass));
+		});	
+		return responseList;
 	}
 	
 	/**
@@ -75,9 +145,13 @@ public abstract class AbstractService {
 	 * @return
 	 */
 	protected <RESPONSE, BODY> RESPONSE doPost(String url, Class<RESPONSE> responseClass, BODY body) {
+		LOGGER.info("Executando API: doPost " + this.getClass().getSimpleName());
 		RestTemplate rest = new RestTemplate();
-		HttpEntity<BODY> request = new HttpEntity<>(body);
-		return rest.postForObject(url, request, responseClass);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
+		return rest.exchange(url, HttpMethod.POST, request, responseClass).getBody();
 	}
 	
 	/**
@@ -90,9 +164,13 @@ public abstract class AbstractService {
 	 * @return
 	 */
 	protected <BODY> void doPut(String url, BODY body) {
+		LOGGER.info("Executando API: doPut " + this.getClass().getSimpleName());
 		RestTemplate rest = new RestTemplate();
-		HttpEntity<BODY> request = new HttpEntity<>(body);
-		rest.put(url, request);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
+		rest.exchange(url, HttpMethod.PUT, request, Object.class);
 	}
 	
 	/**
@@ -101,8 +179,12 @@ public abstract class AbstractService {
 	 * @return
 	 */
 	protected void doDelete(String url) {
+		LOGGER.info("Executando API: doDelete " + this.getClass().getSimpleName());
 		RestTemplate rest = new RestTemplate();
-		rest.delete(url);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<String> request = new HttpEntity<>("body", headers);
+		rest.exchange(url, HttpMethod.DELETE, request, Object.class);
 	}
-	
 }
