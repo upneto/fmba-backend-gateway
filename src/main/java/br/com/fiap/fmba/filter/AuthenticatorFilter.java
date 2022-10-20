@@ -20,8 +20,20 @@ import org.springframework.stereotype.Component;
 import br.com.fiap.fmba.controller.payload.autenticacao.TokenRequest;
 import br.com.fiap.fmba.service.AutenticacaoService;
 
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
+
+/*
+ * 
+ * ?????????????????????????????????????????????
+ * 
+ *   Não sei porque mas a requisição pela aplicacao android para no filter e não faz o redirecionamento para o controller  
+ * 
+ * 	?????????????????????????????????????????????
+ *
+ *
+ */
+
+//@Component
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 public class AuthenticatorFilter implements Filter {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticatorFilter.class);
@@ -44,13 +56,16 @@ public class AuthenticatorFilter implements Filter {
 	    	try {			
 	    		this.autenticacaoService.verify(new TokenRequest(token));
 	    		LOGGER.info("Request Trusted !!!!");
+	    		chain.doFilter(request, response);
 	    	}catch (Exception e) {
 	    		LOGGER.info("Request Fail !!!!");
 	    		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 	    		return;
 	    	}
 	    }
-	    chain.doFilter(request, response);		
+	    else {
+	    	chain.doFilter(request, response);
+	    }
 	}
 
 }
