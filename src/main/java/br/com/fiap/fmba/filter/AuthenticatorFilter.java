@@ -36,13 +36,16 @@ public class AuthenticatorFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 	    HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-	    LOGGER.info("Logging Request  {} : {}", httpRequest.getMethod(), httpRequest.getRequestURI());
+	    LOGGER.info("Request {}", httpRequest.getRequestURI());
 	    
 	    if(httpRequest.getRequestURI().startsWith("/api")) {
-	    	String token = httpRequest.getHeader("JWT_TOKEN");	    
+	    	String token = httpRequest.getHeader("JWT_TOKEN");
+	    	LOGGER.info("Is Tokenized {}", (token != null && !token.isEmpty()));
 	    	try {			
 	    		this.autenticacaoService.verify(new TokenRequest(token));
+	    		LOGGER.info("Request Trusted !!!!");
 	    	}catch (Exception e) {
+	    		LOGGER.info("Request Fail !!!!");
 	    		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 	    		return;
 	    	}
