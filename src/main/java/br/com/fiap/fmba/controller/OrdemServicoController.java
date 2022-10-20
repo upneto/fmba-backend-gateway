@@ -2,6 +2,7 @@ package br.com.fiap.fmba.controller;
 
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.fiap.fmba.controller.payload.autenticacao.TokenRequest;
 import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoRequest;
 import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoResponse;
+import br.com.fiap.fmba.filter.AuthenticatorFilter;
 import br.com.fiap.fmba.resources.exception.AutenticatorException;
 import br.com.fiap.fmba.resources.exception.BusinessException;
 import br.com.fiap.fmba.resources.exception.WebServiceException;
@@ -145,6 +147,8 @@ public class OrdemServicoController {
 	 * @throws AutenticatorException
 	 */
 	private void verifyAuthentication(String token) throws AutenticatorException {
+		LoggerFactory.getLogger(this.getClass()).info("TOKENIZED: " + token);
 		this.autenticacaoService.verify(new TokenRequest(token));
+		LoggerFactory.getLogger(this.getClass()).info("AUTHENTICATED!!!!");
 	}
 }
