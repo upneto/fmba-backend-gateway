@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 
 import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoRequest;
@@ -18,6 +19,11 @@ import br.com.fiap.fmba.service.payload.VeiculoPayload;
 
 @Service
 public class OrdemServicoService extends AbstractService {
+
+	@Autowired
+	public OrdemServicoService(RestTemplateBuilder builder) {
+	    super(builder);
+	}
 	
 	/**
 	 * Variavel injetada pelo contexto Spring

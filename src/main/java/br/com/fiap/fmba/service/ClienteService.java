@@ -3,7 +3,9 @@ package br.com.fiap.fmba.service;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 
 import br.com.fiap.fmba.resources.exception.BusinessException;
@@ -12,6 +14,11 @@ import br.com.fiap.fmba.service.payload.ClientePayload;
 
 @Service
 public class ClienteService extends AbstractService {
+	
+	@Autowired
+	public ClienteService(RestTemplateBuilder builder) {
+	    super(builder);
+	}
 	
 	/**
 	 * Variavel injetada pelo contexto Spring

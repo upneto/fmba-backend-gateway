@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,12 @@ public abstract class AbstractService {
 
 	/** Logger */
 	public static Logger LOGGER = LoggerFactory.getLogger(AbstractService.class);
+	
+	private RestTemplate rest = null;
+		
+	public AbstractService(RestTemplateBuilder builder) { 
+	    this.rest = builder.build();
+	}
 	
 	/**
 	 * Constroi String com parametros (Query Param)
@@ -57,7 +64,6 @@ public abstract class AbstractService {
 		if(params != null && params.length > 0) {
 			finalUrl.append("?").append(this.buildParans(params));
 		}
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -85,7 +91,6 @@ public abstract class AbstractService {
 		if(params != null && params.length > 0) {
 			finalUrl.append("?").append(this.buildParans(params));
 		}
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -103,7 +108,6 @@ public abstract class AbstractService {
 	 */
 	protected <BODY> void doPost(String url, BODY body) {
 		LOGGER.info("Executando API: doPost " + this.getClass().getSimpleName());
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -122,7 +126,6 @@ public abstract class AbstractService {
 	protected <RESPONSE, BODY> List<RESPONSE> doPostList(String url, Class<RESPONSE> responseClass, BODY body) {
 		LOGGER.info("Executando API: doPostList " + this.getClass().getSimpleName());
 		List<RESPONSE> responseList = new ArrayList<>();		
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -141,12 +144,11 @@ public abstract class AbstractService {
 	 * @param <BODY>
 	 * @param url
 	 * @param responseClass
-	 * @param body
+	 * @param body 
 	 * @return
 	 */
 	protected <RESPONSE, BODY> RESPONSE doPost(String url, Class<RESPONSE> responseClass, BODY body) {
 		LOGGER.info("Executando API: doPost " + this.getClass().getSimpleName());
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -165,7 +167,6 @@ public abstract class AbstractService {
 	 */
 	protected <BODY> void doPut(String url, BODY body) {
 		LOGGER.info("Executando API: doPut " + this.getClass().getSimpleName());
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -180,7 +181,6 @@ public abstract class AbstractService {
 	 */
 	protected void doDelete(String url) {
 		LOGGER.info("Executando API: doDelete " + this.getClass().getSimpleName());
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
