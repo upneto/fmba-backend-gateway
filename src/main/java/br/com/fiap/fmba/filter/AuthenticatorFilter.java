@@ -1,6 +1,8 @@
 package br.com.fiap.fmba.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -29,6 +31,23 @@ public class AuthenticatorFilter implements Filter {
 	@Autowired
 	private AutenticacaoService autenticacaoService = null;
 
+	private static final List<String> PATHS_TO_VALIDATE = Arrays.asList("cliente", "ordem_servico", "veiculo");
+	
+	/**
+	 * @param httpRequest
+	 * @return
+	 */
+	private boolean verificaSeValidaToken(HttpServletRequest httpRequest) {
+		boolean toValidate = false;
+	    for(String path : PATHS_TO_VALIDATE) {
+	    	if(httpRequest.getRequestURI().contains(path)) {
+	    		toValidate = true;
+	    		break;
+	    	}
+	    }
+		return toValidate;
+	}
+	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -38,7 +57,7 @@ public class AuthenticatorFilter implements Filter {
 
 	    LOGGER.info("Request {}", httpRequest.getRequestURI());
 	    
-	    if(httpRequest.getRequestURI().startsWith("/api")) {
+	    if(this.verificaSeValidaToken(httpRequest)) {
 	    	String token = httpRequest.getHeader("JWT_TOKEN");
 	    	LOGGER.info("Is Tokenized {}", (token != null && !token.isEmpty()));
 	    	try {			
@@ -55,5 +74,4 @@ public class AuthenticatorFilter implements Filter {
 	    	chain.doFilter(request, response);
 	    }
 	}
-
 }

@@ -19,8 +19,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@CrossOrigin(origins = "/**")
-@RequestMapping("/api/cliente")
+@CrossOrigin(origins = "*")
+@RequestMapping("/cliente")
 public class ClienteController {
 
 	@Autowired

@@ -25,8 +25,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@CrossOrigin(origins = "/**")
-@RequestMapping("/api/ordem_servico")
+@CrossOrigin(origins = "*")
+@RequestMapping("/ordem_servico")
 public class OrdemServicoController {
 
 	@Autowired
