@@ -47,7 +47,7 @@ public class OrdemServicoController {
             @ApiResponse(code = 200, message = "Retorna OrdemServico"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
-	@GetMapping(value = "/{id}", produces="application/json", consumes="application/json")
+	@GetMapping(value = "/{id}", produces="application/json")
 	public ResponseEntity<OrdemServicoResponse> findBy(@PathVariable long id) throws WebServiceException, BusinessException  {
 		return new ResponseEntity<>(this.service.find(id), HttpStatus.OK);
 	}
@@ -79,7 +79,7 @@ public class OrdemServicoController {
             @ApiResponse(code = 200, message = "Removeu Ordem de Servico com sucesso"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
-	@DeleteMapping(value = "/{id}", produces="application/json", consumes="application/json")
+	@DeleteMapping(value = "/{id}", produces="application/json")
 	public ResponseEntity<?> delete(@PathVariable long id) throws WebServiceException, BusinessException  {
 		this.service.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
