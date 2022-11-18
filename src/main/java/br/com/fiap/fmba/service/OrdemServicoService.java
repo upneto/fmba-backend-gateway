@@ -30,7 +30,7 @@ public class OrdemServicoService extends AbstractService {
 	 * 		'env' = variavel injetada da runtime jvm
 	 * 		'.url.backend.ordem_servico' = arquivo application.properties  
 	 */
-	@Value("${${env}.url.backend.ordem_servico}")
+	@Value("${${env}.url.backend.ordem_servico}") 
 	private String url = null;
 	
 	@Autowired
@@ -58,7 +58,9 @@ public class OrdemServicoService extends AbstractService {
 					.codigo(payload.getId())
 					.dataInicio(payload.getDataInicioFormat())
 					.dataFinal(payload.getDataFinalFormat())
+					.idCliente(cliente.getId())
 					.nomeCliente(cliente.getNome())
+					.idVeiculo(veiculo.getId())
 					.veiculo(veiculo.getMarca() + " " + veiculo.getModelo())
 					.placa(veiculo.getPlaca())
 					.build();

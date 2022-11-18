@@ -39,13 +39,13 @@ public class AuthenticatorFilter implements Filter {
 	 */
 	private boolean verificaSeValidaToken(HttpServletRequest httpRequest) {
 		boolean toValidate = false;
-	    for(String path : PATHS_TO_VALIDATE) {
-	    	if(httpRequest.getRequestURI().contains(path)) {
-	    		toValidate = true;
-	    		break;
-	    	}
-	    }
-		return false;//toValidate;
+//	    for(String path : PATHS_TO_VALIDATE) {
+//	    	if(httpRequest.getRequestURI().contains(path)) {
+//	    		toValidate = true;
+//	    		break;
+//	    	}
+//	    }
+		return toValidate;
 	}
 	
 	@Override

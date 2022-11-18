@@ -29,7 +29,7 @@ public class OrdemServicoPayload {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dataInicio;	
 	private int status;	
-	private BigInteger veiculo;	
+	private BigInteger veiculo;
 	private BigInteger cliente;
 	
 	// Metodos auxiliares

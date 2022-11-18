@@ -16,7 +16,9 @@ public class OrdemServicoResponse {
 	 private Long codigo;
 	 private String dataInicio;
 	 private String dataFinal;
+	 private Long idCliente;
 	 private String nomeCliente;
-	 private String veiculo;
+	 private Long idVeiculo;
+	 private String veiculo;	 
 	 private String placa;
 }
