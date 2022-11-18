@@ -89,8 +89,10 @@ public class OrdemServicoService extends AbstractService {
 						.codigo(payload.getId())
 						.dataInicio(payload.getDataInicioFormat())
 						.dataFinal(payload.getDataFinalFormat())
+						.idCliente(cliente.getId())
 						.nomeCliente(cliente.getNome())
 						.veiculo(veiculo.getMarca() + " " + veiculo.getModelo())
+						.idVeiculo(veiculo.getId())
 						.placa(veiculo.getPlaca())
 						.build());
 			}			
