@@ -139,7 +139,7 @@ public class OrdemServicoService extends AbstractService {
 	 */
 	public void delete(long id) throws WebServiceException, BusinessException {
 		try {
-			super.doDelete(this.url);
+			super.doDelete(this.url + id);
 		}catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
 		}
