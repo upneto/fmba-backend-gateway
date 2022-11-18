@@ -45,7 +45,7 @@ public class AuthenticatorFilter implements Filter {
 	    		break;
 	    	}
 	    }
-		return toValidate;
+		return false;//toValidate;
 	}
 	
 	@Override
