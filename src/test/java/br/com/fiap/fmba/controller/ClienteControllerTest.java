@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import br.com.fiap.fmba.controller.api.ClienteController;
+import br.com.fiap.fmba.resources.exception.AutenticatorException;
 import br.com.fiap.fmba.resources.exception.BusinessException;
 import br.com.fiap.fmba.resources.exception.WebServiceException;
 import br.com.fiap.fmba.service.ClienteService;
@@ -60,7 +62,7 @@ public class ClienteControllerTest {
 	}
 	
 	@Test
-	public void testFindAll() throws WebServiceException, BusinessException {
+	public void testFindAll() throws WebServiceException, BusinessException, AutenticatorException {
 		ResponseEntity<List<ClientePayload>> result = this.controller.findAll();
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 		assertEquals(result.getBody().size(), LIST_PAYLOAD.size());

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/health")
-public class HealthController {
+public class HealthController extends AbstractController {
 
 	@GetMapping
 	public ResponseEntity<?> health() {

@@ -21,8 +21,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import br.com.fiap.fmba.controller.api.OrdemServicoController;
 import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoRequest;
 import br.com.fiap.fmba.controller.payload.ordemservico.OrdemServicoResponse;
+import br.com.fiap.fmba.resources.exception.AutenticatorException;
 import br.com.fiap.fmba.resources.exception.BusinessException;
 import br.com.fiap.fmba.resources.exception.WebServiceException;
 import br.com.fiap.fmba.service.OrdemServicoService;
@@ -75,7 +77,7 @@ public class OrdemServicoControllerTest {
 	}
 
 	@Test
-	public void testFindAll() throws WebServiceException, BusinessException {
+	public void testFindAll() throws WebServiceException, BusinessException, AutenticatorException {
 		ResponseEntity<List<OrdemServicoResponse>> result = this.controller.findAll();
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 		assertEquals(result.getBody().size(), LIST_PAYLOAD.size());
@@ -83,28 +85,28 @@ public class OrdemServicoControllerTest {
 	}
 
 	@Test
-	public void testFindBy() throws WebServiceException, BusinessException {
+	public void testFindBy() throws WebServiceException, BusinessException, AutenticatorException {
 		ResponseEntity<OrdemServicoResponse> result = this.controller.findBy(1L);
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 		assertEquals(result.getBody(), LIST_PAYLOAD.get(0));
 	}
 
 	@Test
-	public void testInsert() throws WebServiceException, BusinessException {				
+	public void testInsert() throws WebServiceException, BusinessException, AutenticatorException {				
 		ResponseEntity<?> result = this.controller.insert(REQUEST);
 		Mockito.verify(service, Mockito.times(1)).insert(REQUEST);
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 	}
 
 	@Test
-	public void testUpdate() throws WebServiceException, BusinessException {
+	public void testUpdate() throws WebServiceException, BusinessException, AutenticatorException {
 		ResponseEntity<?> result = this.controller.update(REQUEST);
 		Mockito.verify(service, Mockito.times(1)).update(REQUEST);
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 	}
 
 	@Test
-	public void testDelete() throws WebServiceException, BusinessException {
+	public void testDelete() throws WebServiceException, BusinessException, AutenticatorException {
 		ResponseEntity<?> result = this.controller.delete(1L);
 		Mockito.verify(service, Mockito.times(1)).delete(1l);
 		assertEquals(result.getStatusCode(), HttpStatus.OK);

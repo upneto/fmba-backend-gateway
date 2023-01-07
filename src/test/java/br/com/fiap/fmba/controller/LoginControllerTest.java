@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.fiap.fmba.controller.payload.autenticacao.LoginRequest;
 import br.com.fiap.fmba.controller.payload.autenticacao.LoginResponse;
 import br.com.fiap.fmba.resources.exception.AutenticatorException;
+import br.com.fiap.fmba.resources.exception.WebServiceException;
 import br.com.fiap.fmba.service.AutenticacaoService;
 
 @RunWith(SpringRunner.class)
@@ -49,7 +50,7 @@ public class LoginControllerTest {
 	}
 
 	@Test
-	public void testLogin() throws AutenticatorException {
+	public void testLogin() throws AutenticatorException, WebServiceException {
 		ResponseEntity<LoginResponse> login = controller.login(LoginRequest.builder()
 				.usuario("Mock Usuario")
 				.senha("Mock Senha")
