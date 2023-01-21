@@ -34,6 +34,7 @@ public class LoginController extends AbstractController {
 	@PostMapping(produces="application/json", consumes="application/json")
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws WebServiceException, AutenticatorException {
 		LOGGER.info("Executando Login ... ");
+		System.out.println("Executando Login ... ");
 		return new ResponseEntity<>(this.service.login(request), HttpStatus.OK);
 	}
 }
