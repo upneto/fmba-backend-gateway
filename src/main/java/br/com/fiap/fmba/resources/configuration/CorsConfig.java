@@ -11,9 +11,20 @@ public class CorsConfig implements WebMvcConfigurer {
 
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**")
-        	.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        	.allowedOrigins("*")
-        	.allowedHeaders("Content_Type", "Authorization");
+		 registry.addMapping("/**")
+		 	.allowedOrigins("https://fmba-frontend-web.herokuapp.com")
+		 	.allowedMethods("*")
+		 	.maxAge(3600L)
+		 	.allowedHeaders("*")
+		 	.exposedHeaders("Authorization")
+		 	.allowCredentials(true);
+		 
+		 registry.addMapping("/**")
+		 	.allowedOrigins("http://localhost:4500")
+		 	.allowedMethods("*")
+		 	.maxAge(3600L)
+		 	.allowedHeaders("*")
+		 	.exposedHeaders("Authorization")
+		 	.allowCredentials(true);
     }
 }
