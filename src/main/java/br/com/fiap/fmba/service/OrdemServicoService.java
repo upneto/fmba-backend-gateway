@@ -38,6 +38,9 @@ public class OrdemServicoService extends AbstractService {
 	
 	@Autowired
 	private ClienteService clienteService = null;
+	
+	@Autowired
+	private FilaOrdemServicoService filaOrdemServicoService = null;
 
 	/**
 	 * Find
@@ -112,6 +115,9 @@ public class OrdemServicoService extends AbstractService {
 	public void insert(OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException {
 		try {
 			super.doPost(this.url, OrdemServicoPayload.class, ordemServico);
+			
+			// Envia para processamento
+			this.filaOrdemServicoService.send(ordemServico);
 		}catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
 		}		
