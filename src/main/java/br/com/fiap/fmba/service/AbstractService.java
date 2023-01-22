@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,9 @@ public abstract class AbstractService {
 
 	/** Logger */
 	public static Logger LOGGER = LoggerFactory.getLogger(AbstractService.class);
+	
+	@Value("${fmba.token.origin}")
+	private String tokenOrigin = null;
 	
 	private RestTemplate rest = null;
 		
@@ -47,6 +51,18 @@ public abstract class AbstractService {
 	}
 	
 	/**
+	 * Headers
+	 * @return
+	 */
+	private HttpHeaders buildHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.set("FMBA-ORIGIN", this.tokenOrigin);
+		return headers;
+	}
+	
+	/**
 	 * GET
 	 * @param <RESPONSE>
 	 * @param url
@@ -64,9 +80,7 @@ public abstract class AbstractService {
 		if(params != null && params.length > 0) {
 			finalUrl.append("?").append(this.buildParans(params));
 		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<String> request = new HttpEntity<String>("body", headers);
 		ResponseEntity<Object[]> exchange = rest.exchange(finalUrl.toString(), HttpMethod.GET, request, Object[].class);
 		
@@ -76,7 +90,7 @@ public abstract class AbstractService {
 		});	
 		return responseList;
 	}
-	
+
 	/**
 	 * GET
 	 * @param <T>
@@ -91,9 +105,7 @@ public abstract class AbstractService {
 		if(params != null && params.length > 0) {
 			finalUrl.append("?").append(this.buildParans(params));
 		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<String> request = new HttpEntity<String>("body", headers);
 		ResponseEntity<RESPONSE> exchange = rest.exchange(finalUrl.toString(), HttpMethod.GET, request, responseClass);
 		return exchange.getBody();
@@ -108,9 +120,7 @@ public abstract class AbstractService {
 	 */
 	protected <BODY> void doPost(String url, BODY body) {
 		LOGGER.info("Executando API: doPost " + this.getClass().getSimpleName());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
 		rest.exchange(url, HttpMethod.POST, request, Object.class);
 	}
@@ -126,9 +136,7 @@ public abstract class AbstractService {
 	protected <RESPONSE, BODY> List<RESPONSE> doPostList(String url, Class<RESPONSE> responseClass, BODY body) {
 		LOGGER.info("Executando API: doPostList " + this.getClass().getSimpleName());
 		List<RESPONSE> responseList = new ArrayList<>();		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
 		ResponseEntity<Object[]> exchange = rest.exchange(url, HttpMethod.POST, request, Object[].class);
 		ObjectMapper mapper = new ObjectMapper();
@@ -149,9 +157,7 @@ public abstract class AbstractService {
 	 */
 	protected <RESPONSE, BODY> RESPONSE doPost(String url, Class<RESPONSE> responseClass, BODY body) {
 		LOGGER.info("Executando API: doPost " + this.getClass().getSimpleName());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
 		return rest.exchange(url, HttpMethod.POST, request, responseClass).getBody();
 	}
@@ -167,9 +173,7 @@ public abstract class AbstractService {
 	 */
 	protected <BODY> void doPut(String url, BODY body) {
 		LOGGER.info("Executando API: doPut " + this.getClass().getSimpleName());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<BODY> request = new HttpEntity<>(body, headers);
 		rest.exchange(url, HttpMethod.PUT, request, Object.class);
 	}
@@ -181,9 +185,7 @@ public abstract class AbstractService {
 	 */
 	protected void doDelete(String url) {
 		LOGGER.info("Executando API: doDelete " + this.getClass().getSimpleName());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpHeaders headers = this.buildHeaders();
 		HttpEntity<String> request = new HttpEntity<>("body", headers);
 		rest.exchange(url, HttpMethod.DELETE, request, Object.class);
 	}

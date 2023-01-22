@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import br.com.fiap.fmba.controller.AbstractController;
 import br.com.fiap.fmba.controller.payload.autenticacao.TokenRequest;
 import br.com.fiap.fmba.service.AutenticacaoService;
 
@@ -26,7 +25,7 @@ public class Autenticador {
 	private AutenticacaoService autenticacaoService = null;
 	
 	/** Logger */
-	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(Autenticador.class);
 
 	/**
 	 * Valida autenticacao pelo token JWT
