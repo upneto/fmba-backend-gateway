@@ -1,6 +1,5 @@
-package br.com.fiap.fmba.controller.payload.ordemservico;
+package br.com.fiap.fmba.service.payload;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,17 +15,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrdemServicoRequest {
+public class OrdemServicoMessage {
 
-	private long id;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date dataCriacao;
+	private Date dataEnvio;	
+	private String nomeDestinatario;
+	private String emailDestinatario;
+	
+	private long codigoServico;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date dataFinal;
+	private Date dataInicioServico;	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date dataInicio;
-	private int status;
-	private BigInteger veiculo;
-	private BigInteger cliente;
+	private Date dataFinalServico;
 	private String descricaoServico;
+	
+	private String modeloVeiculo;
+	private String marcaVeiculo;
+	private String placaVeiculo;
+	
 }

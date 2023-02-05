@@ -31,6 +31,7 @@ public class OrdemServicoPayload {
 	private int status;	
 	private BigInteger veiculo;
 	private BigInteger cliente;
+	private String descricao;
 	
 	// Metodos auxiliares
 	

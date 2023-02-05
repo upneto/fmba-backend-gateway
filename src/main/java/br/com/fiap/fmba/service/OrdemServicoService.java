@@ -66,6 +66,7 @@ public class OrdemServicoService extends AbstractService {
 					.idVeiculo(veiculo.getId())
 					.veiculo(veiculo.getMarca() + " " + veiculo.getModelo())
 					.placa(veiculo.getPlaca())
+					.descricaoServico(payload.getDescricao())
 					.build();
 		}catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
@@ -97,6 +98,7 @@ public class OrdemServicoService extends AbstractService {
 						.veiculo(veiculo.getMarca() + " " + veiculo.getModelo())
 						.idVeiculo(veiculo.getId())
 						.placa(veiculo.getPlaca())
+						.descricaoServico(payload.getDescricao())
 						.build());
 			}			
 		}
@@ -114,13 +116,18 @@ public class OrdemServicoService extends AbstractService {
 	 */
 	public void insert(OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException {
 		try {
-			super.doPost(this.url, OrdemServicoPayload.class, ordemServico);
-			
-			// Envia para processamento
-			this.filaOrdemServicoService.send(ordemServico);
-		}catch (Exception e) {
+			// TODO super.doPost(this.url, OrdemServicoPayload.class, ordemServico);
+		}
+		catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
-		}		
+		}
+		try {
+			// Envia para fila de envio de emails!
+			this.filaOrdemServicoService.send(ordemServico);
+		}
+		catch (Exception e) {
+			LOGGER.error("Não foi possível enviar a mensagem!", e);
+		}
 	}
 
 	/**
@@ -132,8 +139,17 @@ public class OrdemServicoService extends AbstractService {
 	public void update(OrdemServicoRequest ordemServico) throws WebServiceException, BusinessException {
 		try {
 			super.doPut(this.url, ordemServico);
-		}catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new WebServiceException(e.getMessage(), e);
+		}
+		
+		try {
+			// Envia para fila de envio de emails!
+			this.filaOrdemServicoService.send(ordemServico);
+		}
+		catch (Exception e) {
+			LOGGER.error("Não foi possível enviar a mensagem!", e);
 		}
 	}
 

@@ -21,5 +21,6 @@ public class OrdemServicoResponse {
 	 private Long idVeiculo;
 	 private String veiculo;	 
 	 private String placa;
+	 private String descricaoServico;
 }
 
